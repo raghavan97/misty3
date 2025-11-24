@@ -1,10 +1,10 @@
 #  misty3
 
-The misty project helps build [BACpypes3](https://github.com/JoelBender/BACpypes3)   applications that work on MS/TP Networks. The existing bacpypes3 BIP (BACnet IP ) applications can be easily ported to to use misty3 and work on MS/TP Networks.
+The misty3 project helps build [BACpypes3](https://github.com/JoelBender/BACpypes3)   applications that work on MS/TP Networks. The existing bacpypes3 BIP (BACnet IP ) applications can be easily ported to to use misty3 and work on MS/TP Networks.
 
 # Table of Contents
 
-- [misty](#misty)
+- [misty3](#misty3)
 - [Table of Contents](#table-of-contents)
 - [How does this Work ?](#how-does-this-work--)
 - [Installation and Usage for Users](#installation-and-usage-for-users)
@@ -22,13 +22,13 @@ A BACpypes3 application derived from MSTPSimpleApplication sends and receives da
 
 The MSTP Agent relies on the open source [bacnet-stack version 0.8.4](https://sourceforge.net/projects/bacnet/files/bacnet-stack/) by skarg for communicating with the Serial port. The MSTP Agent uses the dlmstp_xxx functions of the bacnet-stack to send/receive the MSTP Frames and also to set configuration parameters of the Serial port (like baud rate, max_info).
 
-The following image shows the idea on which the misty is based.
+The following image shows the idea on which the misty3 is based.
 
-![misty concept](screenshots/misty_concept.png)
+![misty3 concept](screenshots/misty_concept.png)
 
 # Installation and Usage 
 
-This section talks about the installation for people who are interested in using misty as a product to interact with the BACnet devices connected on a serial port to the Linux machine.
+This section talks about the installation for people who are interested in using misty3 as a product to interact with the BACnet devices connected on a serial port to the Linux machine.
 
 ## Prereqs (Linux / Raspberry Pi)
 
@@ -45,7 +45,7 @@ source .venv/bin/activate
 python -m pip install --upgrade pip
 ```
 
-## Clone and install misty
+## Clone and install misty3
 ```bash
 git clone https://github.com/raghavan97/misty3
 cd misty3
@@ -61,7 +61,7 @@ python -m pip install --no-cache-dir --force-reinstall .
 ```
 Verify Installation
 ```bash
-# This should show misty
+# This should show misty3
 pip list
 ```
 ## Running BACnet client
@@ -95,12 +95,12 @@ python samples/discover-objects.py  --interface=/var/tmp/ttyp0 --mstpaddress=25 
 
 The following image shows a sample interaction between the mini-device, and discover-objects program (running on the same machine using the ports created by socat utility
 
-![misty with socat](screenshots/misty3_with_socat.png)
+![misty3 with socat](screenshots/misty3_with_socat.png)
 
 
 # Porting BACpypes3 IP Apps to MSTP
 
-To port an BACpypes3 BIPSimpleApplication to use the MSTP Networks, the following changes are required in the configuration file and application.
+To port an BACpypes3 Application to use the MSTP Networks, the following changes are required in the configuration file and application.
 
 (1) Import and use the MSTPApplication from misty3.mstplib instead of 
 ```python
