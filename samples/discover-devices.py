@@ -14,6 +14,7 @@ from bacpypes3.primitivedata import ObjectIdentifier
 from bacpypes3.apdu import ErrorRejectAbortNack
 # from bacpypes3.app import Application
 from misty3.mstplib import MSTPApplication as Application
+from misty3.mstplib import MSTPArgumentParser
 
 # some debugging
 _debug = 0
@@ -26,7 +27,7 @@ show_warnings: bool = False
 async def main() -> None:
     app = None
     try:
-        parser = SimpleArgumentParser()
+        parser = MSTPArgumentParser()
         parser.add_argument(
             "low_limit",
             type=int,
