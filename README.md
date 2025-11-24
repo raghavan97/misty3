@@ -7,28 +7,15 @@ The misty3 project helps build [BACpypes3](https://github.com/JoelBender/BACpype
 - [misty3](#misty3)
 - [Table of Contents](#table-of-contents)
 - [How does this Work ?](#how-does-this-work--)
-- [Installation and Usage for Users](#installation-and-usage-for-users)
+- [Installation and Usage](#installation-and-usage-for-users)
 - [Installation and Usage for Developers](#installation-and-usage-for-developers)
 - [Testing MSTP  Applications](#testing-mstp--applications)
 - [Porting BACpypes3 IP Apps to MSTP](#porting-BACpypes3-ip-apps-to-mstp)
 - [Limitations](#limitations)
-- [Snap build, installation and Usage](#snap-build--installation-and-usage)
-
-# How does this Work ?
-
-For supporting BACpypes3 applications on MSTP Network, a new class for application called **MSTPApplication** has been created.  All the MSTP applications need to derive from the MSTPApplication.
-
-A BACpypes3 application derived from MSTPSimpleApplication sends and receives data to an MSTP Agent. The MSTP Agent receives the packets sent out by the BACpypes3 application and sends it out on the Serial port using the Serial port Driver. In the response path, the Serial port Driver receives the MSTP Frame sent by the peer and passes it to the MSTP Agent. The MSTP agent hands it over to the BACpypes3 application.Each BACpypes3 application derived from MSTPSimpleApplication is tied to a Physical Interface (e.g. ttyS0).
-
-The MSTP Agent relies on the open source [bacnet-stack version 0.8.4](https://sourceforge.net/projects/bacnet/files/bacnet-stack/) by skarg for communicating with the Serial port. The MSTP Agent uses the dlmstp_xxx functions of the bacnet-stack to send/receive the MSTP Frames and also to set configuration parameters of the Serial port (like baud rate, max_info).
-
-The following image shows the idea on which the misty3 is based.
-
-![misty3 concept](screenshots/misty_concept.png)
 
 # Installation and Usage 
 
-This section talks about the installation for people who are interested in using misty3 as a product to interact with the BACnet devices connected on a serial port to the Linux machine.
+This section talks about the installation for people who are interested in using misty3 as a means to interact with the BACnet devices connected on a serial port to the Linux machine.
 
 ## Prereqs (Linux / Raspberry Pi)
 
@@ -102,7 +89,7 @@ The following image shows a sample interaction between the mini-device, and disc
 
 To port an BACpypes3 Application to use the MSTP Networks, the following changes are required in the configuration file and application.
 
-(1) Import and use the MSTPApplication from misty3.mstplib instead of 
+(1) Import and use the MSTPApplication from misty3.mstplib instead of Application from bacpypes3.app
 ```python
 # from bacpypes3.app import Application
 from misty3.mstplib import MSTPApplication as Application
@@ -118,6 +105,20 @@ The misty3/samples directory contains some bacpypes3 IP applications ported to u
 - discover-devices.py
 - discover-objects.py
 - mini-device-revisited.py
+
+# How does this Work ?
+
+For supporting BACpypes3 applications on MSTP Network, a new class for application called **MSTPApplication** has been created.  All the MSTP applications need to derive from the MSTPApplication.
+
+A BACpypes3 application derived from MSTPSimpleApplication sends and receives data to an MSTP Agent. The MSTP Agent receives the packets sent out by the BACpypes3 application and sends it out on the Serial port using the Serial port Driver. In the response path, the Serial port Driver receives the MSTP Frame sent by the peer and passes it to the MSTP Agent. The MSTP agent hands it over to the BACpypes3 application.Each BACpypes3 application derived from MSTPSimpleApplication is tied to a Physical Interface (e.g. ttyS0).
+
+The MSTP Agent relies on the open source [bacnet-stack version 0.8.4](https://sourceforge.net/projects/bacnet/files/bacnet-stack/) by skarg for communicating with the Serial port. The MSTP Agent uses the dlmstp_xxx functions of the bacnet-stack to send/receive the MSTP Frames and also to set configuration parameters of the Serial port (like baud rate, max_info).
+
+The following image shows the idea on which the misty3 is based.
+
+![misty3 concept](screenshots/misty_concept.png)
+
+
 
 # Limitations
 The following are the known limitations of MSTP Agent Project
