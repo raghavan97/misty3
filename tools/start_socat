@@ -1,0 +1,1 @@
+socat PTY,link=/var/tmp/ptyp0,rawer PTY,link=/var/tmp/ttyp0,rawer

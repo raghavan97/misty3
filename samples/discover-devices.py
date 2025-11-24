@@ -7,14 +7,14 @@ import sys
 import asyncio
 
 from bacpypes3.debugging import ModuleLogger
-from bacpypes3.argparse import SimpleArgumentParser
+# from bacpypes3.argparse import SimpleArgumentParser
+from misty3.mstplib import MSTPArgumentParser as SimpleArgumentParser
 
 from bacpypes3.pdu import Address
 from bacpypes3.primitivedata import ObjectIdentifier
 from bacpypes3.apdu import ErrorRejectAbortNack
 # from bacpypes3.app import Application
 from misty3.mstplib import MSTPApplication as Application
-from misty3.mstplib import MSTPArgumentParser
 
 # some debugging
 _debug = 0
@@ -27,7 +27,7 @@ show_warnings: bool = False
 async def main() -> None:
     app = None
     try:
-        parser = MSTPArgumentParser()
+        parser = SimpleArgumentParser()
         parser.add_argument(
             "low_limit",
             type=int,
