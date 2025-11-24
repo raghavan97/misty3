@@ -39,9 +39,16 @@ python -m pip install --upgrade pip
 ```bash
 git clone https://github.com/raghavan97/misty3
 cd misty3
-# builds the C library and installs in editable mode
+# builds the C library and installs it
 python -m pip install . 
 ```
+
+Verify Installation
+```bash
+# This should show misty3
+pip list
+```
+
 Force a clean, local rebuild if you see stale files
 
 ```bash
@@ -49,14 +56,11 @@ pip cache purge
 rm -rf build dist *.egg-info src/build
 python -m pip install --no-cache-dir --force-reinstall .
 ```
-Verify Installation
-```bash
-# This should show misty3
-pip list
-```
-## Running BACnet client
 
-Start the bacnet client program present in the **samples** directory
+## Running discover-objects Sample
+
+Start the discover-objects program present in the **samples** directory. This should show the objects present in the device specified
+
 ```bash
 # specify the interface with your actual device e.g. /dev/ttyS3
 # Specify the mstpaddress with your local mstp mac
@@ -120,8 +124,6 @@ The MSTP Agent relies on the open source [bacnet-stack version 0.8.4](https://so
 The following image shows the idea on which the misty3 is based.
 
 ![misty3 concept](screenshots/misty_concept.png)
-
-
 
 # Limitations
 The following are the known limitations of MSTP Agent Project
