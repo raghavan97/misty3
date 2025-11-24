@@ -76,7 +76,7 @@ The following is the procedure for using *socat* to test the interaction of BACn
 
 (1) Execute the socat utility to create two connected virtual serial ports ptyp0 and ttyp0 in a terminal window
 ```bash
-socat PTY,link=/var/tmp/ptyp0,rawer PTY,link=/var/tmp/ttyp0,rawer
+socat PTY,link=/var/tmp/ptyp0,b38400 PTY,link=/var/tmp/ttyp0,b38400
 ```
 (2) On a new terminal window , start the mini-device on ptyp0.
 ```bash
