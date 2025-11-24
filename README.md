@@ -6,11 +6,14 @@ The misty3 project helps build [BACpypes3](https://github.com/JoelBender/BACpype
 
 - [misty3](#misty3)
 - [Table of Contents](#table-of-contents)
-- [How does this Work ?](#how-does-this-work--)
-- [Installation and Usage](#installation-and-usage-for-users)
-- [Installation and Usage for Developers](#installation-and-usage-for-developers)
-- [Testing MSTP  Applications](#testing-mstp--applications)
-- [Porting BACpypes3 IP Apps to MSTP](#porting-BACpypes3-ip-apps-to-mstp)
+- [Installation and Usage](#installation-and-usage)
+  - [Prereqs (Linux / Raspberry Pi)](#prereqs-linux--raspberry-pi)
+  - [Create a virtualenv](#create-a-virtualenv)
+  - [Clone and install misty3](#clone-and-install-misty3)
+  - [Running BACnet client](#running-bacnet-client)
+  - [Running Samples without Hardware Devices](#running-samples-without-hardware-devices)
+- [Porting BACpypes3 IP Apps to MSTP](#porting-bacpypes3-ip-apps-to-mstp)
+- [How does this Work ?](#how-does-this-work-)
 - [Limitations](#limitations)
 
 # Installation and Usage 
