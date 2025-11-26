@@ -137,12 +137,18 @@ class MSTPArgumentParser(SimpleArgumentParser):
         # now let the base class do its checks and env expansion
         super().expand_args(result_args)
 
-
+@bacpypes_debugging
 class MSTPApplication(Application):
     _mstp_global_inited = False
 
+    _debug: Callable[..., None]
+
     @classmethod
     def from_args(cls, args):
+
+        if _debug:
+            MSTPApplication._debug("args %s", args)
+
         app = super().from_args(args)
         app._post_init_mstp(args)
         return app
@@ -167,28 +173,20 @@ class MSTPApplication(Application):
 
         # patch them
         self._adapter.process_npdu = self._outbound_hook.__get__(self._adapter)
-        self._adapter.confirmation = self._inbound_hook.__get__(self._adapter)
 
     async def _outbound_hook(self, npdu):
         # self = adapter, but application available via self._app
         pdu = npdu.encode()
         raw = bytes(pdu.pduData)
 
-        # print("OUT:", raw.hex(sep=' '))
+        if _debug:
+            MSTPApplication._debug("TX:%s", raw.hex(sep=' '))
 
         # call application MSTP TX
         await self._app.send_mstp(raw, npdu)
 
         # forward to original
         # return await self._app._orig_out(npdu)
-
-    async def _inbound_hook(self, pdu):
-        raw = bytes(pdu.pduData)
-
-        # print("IN:", raw.hex(sep=' '))
-
-        # forward to the application for possible processing later
-        return await self._app._orig_in(pdu)
 
     async def send_mstp(self, raw: bytes, npdu):
         try:
@@ -322,6 +320,9 @@ class MSTPApplication(Application):
         """
         if len(data) < 2:
             return
+
+        if _debug:
+            MSTPApplication._debug("RX:%s", data.hex(sep=' '))
 
         src_mac = data[0]
         raw_npdu = data[1:]
