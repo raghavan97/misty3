@@ -82,15 +82,21 @@ socat PTY,link=/var/tmp/ptyp0,b38400 PTY,link=/var/tmp/ttyp0,b38400
 ```bash
 python samples/mini-device-revisited.py  --interface=/var/tmp/ptyp0 --mstpaddress=30 --instance=999
 ```
-(3) On a new terminal window, start the discover-objects on ttyp0.
+Add the debug option `--debug=misty3.mstplib.MSTPApplication` for additional debug information
+
+(3) On a new terminal window, start the discover-objects on ttyp0. Specify a different port 47809 so that we can run 2 bacpypes3 applications on the same machine
 ```bash
-python samples/discover-objects.py  --interface=/var/tmp/ttyp0 --mstpaddress=25 999
+python samples/discover-objects.py  --interface=/var/tmp/ttyp0 --mstpaddress=25 999 --address=0.0.0.0:47809
 ```
+Add the debug option `--debug=misty3.mstplib.MSTPApplication` for additional debug information
 
 The following image shows a sample interaction between the mini-device, and discover-objects program (running on the same machine using the ports created by socat utility
 
 ![misty3 with socat](screenshots/misty3_with_socat.png)
 
+The following image shows the debug information displayed when the `--debug=misty3.mstplib.MSTPApplication` is passed to the discover-objects.py invocation. The transmitted BACnet packets (TX) and the received BACnet packets (RX) are shown
+
+![misty3 with debug](screenshots/misty3_with_debug.png)
 
 # Porting BACpypes3 IP Apps to MSTP
 
