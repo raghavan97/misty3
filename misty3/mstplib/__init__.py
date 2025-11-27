@@ -179,9 +179,6 @@ class MSTPApplication(Application):
         pdu = npdu.encode()
         raw = bytes(pdu.pduData)
 
-        if _debug:
-            MSTPApplication._debug("TX:%s", raw.hex(sep=' '))
-
         # call application MSTP TX
         await self._app.send_mstp(raw, npdu)
 
@@ -206,10 +203,14 @@ class MSTPApplication(Application):
             # build MSS/TP payload: [destination MAC] + NPDU bytes
             payload = bytes([dst_mac]) + raw
 
-            # print(f"TX MSTP: dst_mac={dst_mac}, bytes={payload.hex(' ')}")
+            if _debug:
+                MSTPApplication._debug(
+                    "TX: dst_mac=%s: %s",
+                    dst_mac, payload.hex(sep=' ')
+                )
 
-            sent = self.socket.send(payload)
-            # print("SENT", sent)
+            self.socket.send(payload)
+
 
         except Exception as e:
             print("MSTP send error:", e)
@@ -321,9 +322,6 @@ class MSTPApplication(Application):
         if len(data) < 2:
             return
 
-        if _debug:
-            MSTPApplication._debug("RX:%s", data.hex(sep=' '))
-
         src_mac = data[0]
         raw_npdu = data[1:]
 
@@ -335,6 +333,12 @@ class MSTPApplication(Application):
         # 2) Fill in raw data and source
         pdu.pduData = bytearray(raw_npdu)   # IMPORTANT: bytearray, not bytes
         pdu.pduSource = Address(src_mac)    # same style as old MSTPDirector
+
+        if _debug:
+            MSTPApplication._debug(
+                "RX:src_mac=%s:%s",
+                src_mac, data.hex(sep=' ')
+            )
 
         # 3) Inject into the original inbound path (same as UDP)
         await self._orig_in(pdu)
