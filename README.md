@@ -74,10 +74,15 @@ The **socat** utility is useful  to test the MSTP applications without having  H
 
 The following is the procedure for using *socat* to test the interaction of BACnet server and BACnet client.
 
-(1) Execute the socat utility to create two connected virtual serial ports ptyp0 and ttyp0 in a terminal window
+(1) Execute the socat utility to create two connected virtual serial ports ptyp0 and ttyp0 in a terminal window. In linux , use the following command
 ```bash
 socat PTY,link=/var/tmp/ptyp0,b38400 PTY,link=/var/tmp/ttyp0,b38400
 ```
+on macbook use the following command
+```bash
+socat PTY,link=/var/tmp/ptyp0,rawer PTY,link=/var/tmp/ttyp0,rawer
+```
+
 (2) On a new terminal window , start the mini-device on ptyp0.
 ```bash
 python samples/mini-device-revisited.py  --interface=/var/tmp/ptyp0 --mstpaddress=30 --instance=999
