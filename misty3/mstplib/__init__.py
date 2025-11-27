@@ -137,12 +137,18 @@ class MSTPArgumentParser(SimpleArgumentParser):
         # now let the base class do its checks and env expansion
         super().expand_args(result_args)
 
-
+@bacpypes_debugging
 class MSTPApplication(Application):
     _mstp_global_inited = False
 
+    _debug: Callable[..., None]
+
     @classmethod
     def from_args(cls, args):
+
+        if _debug:
+            MSTPApplication._debug("args %s", args)
+
         app = super().from_args(args)
         app._post_init_mstp(args)
         return app
@@ -167,28 +173,17 @@ class MSTPApplication(Application):
 
         # patch them
         self._adapter.process_npdu = self._outbound_hook.__get__(self._adapter)
-        self._adapter.confirmation = self._inbound_hook.__get__(self._adapter)
 
     async def _outbound_hook(self, npdu):
         # self = adapter, but application available via self._app
         pdu = npdu.encode()
         raw = bytes(pdu.pduData)
 
-        # print("OUT:", raw.hex(sep=' '))
-
         # call application MSTP TX
         await self._app.send_mstp(raw, npdu)
 
         # forward to original
         # return await self._app._orig_out(npdu)
-
-    async def _inbound_hook(self, pdu):
-        raw = bytes(pdu.pduData)
-
-        # print("IN:", raw.hex(sep=' '))
-
-        # forward to the application for possible processing later
-        return await self._app._orig_in(pdu)
 
     async def send_mstp(self, raw: bytes, npdu):
         try:
@@ -208,10 +203,14 @@ class MSTPApplication(Application):
             # build MSS/TP payload: [destination MAC] + NPDU bytes
             payload = bytes([dst_mac]) + raw
 
-            # print(f"TX MSTP: dst_mac={dst_mac}, bytes={payload.hex(' ')}")
+            if _debug:
+                MSTPApplication._debug(
+                    "TX: dst_mac=%s: %s",
+                    dst_mac, payload.hex(sep=' ')
+                )
 
-            sent = self.socket.send(payload)
-            # print("SENT", sent)
+            self.socket.send(payload)
+
 
         except Exception as e:
             print("MSTP send error:", e)
@@ -334,6 +333,12 @@ class MSTPApplication(Application):
         # 2) Fill in raw data and source
         pdu.pduData = bytearray(raw_npdu)   # IMPORTANT: bytearray, not bytes
         pdu.pduSource = Address(src_mac)    # same style as old MSTPDirector
+
+        if _debug:
+            MSTPApplication._debug(
+                "RX:src_mac=%s:%s",
+                src_mac, data.hex(sep=' ')
+            )
 
         # 3) Inject into the original inbound path (same as UDP)
         await self._orig_in(pdu)

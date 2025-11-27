@@ -102,8 +102,9 @@ async def main() -> None:
             _log.debug("app: %r", app)
 
         # look for the device
-        i_ams = await app.who_is(args.device_identifier, args.device_identifier)
+        i_ams = await app.who_is(args.device_identifier, args.device_identifier, timeout=10)
         if not i_ams:
+            print("NO Devices found")
             return
 
         i_am = i_ams[0]
