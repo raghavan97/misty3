@@ -10,7 +10,7 @@ The misty3 project helps build [BACpypes3](https://github.com/JoelBender/BACpype
   - [Prereqs (Linux / Raspberry Pi)](#prereqs-linux--raspberry-pi)
   - [Create a virtualenv](#create-a-virtualenv)
   - [Clone and install misty3](#clone-and-install-misty3)
-  - [Running BACnet client](#running-bacnet-client)
+  - [Running discover-objects Sample](#running-discover-objects-sample)
   - [Running Samples without Hardware Devices](#running-samples-without-hardware-devices)
 - [Porting BACpypes3 IP Apps to MSTP](#porting-bacpypes3-ip-apps-to-mstp)
 - [How does this Work ?](#how-does-this-work-)
@@ -103,6 +103,37 @@ The following image shows the debug information displayed when the `--debug=mist
 
 ![misty3 with debug](screenshots/misty3_with_debug.png)
 
+<br>
+
+There are other samples that can be executed using the mini-device simulation on the other end 
+- read-property
+- write-property
+- discover-devices
+
+<br>
+
+```bash
+# 30 is the mstp address of the device we are trying to query
+# The point being queried is analogValue instance 1
+# the property is the present-value
+python samples/read-property.py --interface=/var/tmp/ttyp0 --mstpaddress=25 --address=0.0.0.0:47809 30 analogValue:1 present-value
+
+# 30 is the mstp address of the device we are trying to write to
+# The point being written to is analogValue instance 2
+# the property is the present-value
+# The value that is being written is 87.32
+python samples/write-property.py --interface=/var/tmp/ttyp0 --mstpaddress=25 --address=0.0.0.0:47809 30 analogValue:2 present-value 87.32
+
+
+# The interface with your actual device is /var/tmp/ttyp0
+# The local mstpaddress is 25
+# The minimum device instance to discover is 999
+# The maximum device instance to discover is 1000
+python samples/discover-devices.py  --interface=/var/tmp/ttyp0 --mstpaddress=25 --address=0.0.0.0:47809 999 1000
+
+```
+
+
 # Porting BACpypes3 IP Apps to MSTP
 
 To port an BACpypes3 Application to use the MSTP Networks, the following changes are required in the configuration file and application.
@@ -119,10 +150,12 @@ from misty3.mstplib import MSTPApplication as Application
 from misty3.mstplib import MSTPArgumentParser as SimpleArgumentParser
 ```
 
-The misty3/samples directory contains some bacpypes3 IP applications ported to use the MSTP Network
-- discover-devices.py
-- discover-objects.py
-- mini-device-revisited.py
+The misty3/samples directory contains the bacpypes3 IP applications ported to use the MSTP Network
+- [discover-devices.py](samples/discover-devices.py)
+- [discover-objects.py](samples/discover-objects.py)
+- [mini-device-revisited.py](samples/mini-device-revisited.py)
+- [write-property.py](samples/write-property.py)
+- [read-property.py](samples/read-property.py)
 
 # How does this Work ?
 
